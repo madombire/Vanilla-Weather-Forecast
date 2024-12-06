@@ -20,6 +20,7 @@ function refreshWeather(response) {
   windElement.innerHTML = `${Math.round(windSpeed)} km/h`;
   timeElement.innerHTML = formatDate(date);
   iconElement.innerHTML = `<img src="${response.data.condition.icon_url}" class = "weather-app-icon"/>`;
+  getForecast(response.data.city);
 }
 
 function formatDate(date) {
@@ -38,10 +39,18 @@ function formatDate(date) {
   if (minutes < 10) {
     minutes = `0${minutes}`;
   }
+  if (hours < 10) {
+    hours = `0${hours}`;
+  }
 
   return `${day} ${hours}:${minutes}, `;
 }
-
+function getForecast(response) {
+  let apiKey = "4a2o4dfc38a1eb57a0teddf3b6b7f240";
+  let apiUrl =
+    "https://api.shecodes.io/weather/v1/forecast?query=${city}&key=${apiKey}&units=metric";
+  axios(apiUrl).then(displayForecast);
+}
 function searchCity(city) {
   let apiKey = "4a2o4dfc38a1eb57a0teddf3b6b7f240";
   let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=metric`;
@@ -57,8 +66,6 @@ function handleSearchSubmit(event) {
     alert("Please enter a valid city name!");
   }
 }
-
-// Attach event listener to form
 let searchFormElement = document.querySelector("#search-form");
 searchFormElement.addEventListener("submit", handleSearchSubmit);
 function displayForecast() {
